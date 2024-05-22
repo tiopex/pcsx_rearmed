@@ -100,7 +100,7 @@ set_platform()
 {
   platform=$1
   case "$platform" in
-  generic)
+  miyoo)
     ;;
   pandora)
     sound_drivers="oss alsa"
