@@ -43,7 +43,7 @@
 
 //#define USE_DEBE              1
 #define FB_DEBE_SIZE          4096
-#define FB_VRAM_SIZE          (320*240*2*2)
+#define FB_VRAM_SIZE          (320*240*4*2)
 
 #define MIYOO_VIR_SET_MODE    _IOWR(0x100, 0, unsigned long)
 #define MIYOO_FB0_PUT_OSD     _IOWR(0x100, 0, unsigned long)
@@ -68,7 +68,7 @@ static void *fb_vaddrs[2];
 static unsigned int fb_paddrs[2];
 
 static unsigned short *psx_vram;
-static int psx_step, psx_width, psx_height, psx_bpp;
+static int psx_step, psx_width, psx_height, psx_bpp=16;
 static int psx_offset_x, psx_offset_y, psx_src_width, psx_src_height;
 static int fb_offset_x, fb_offset_y;
 
@@ -563,6 +563,7 @@ static void name(int doffs, const void *vram_, int w, int h, int sstride, int bg
   uint32_t i, len = psx_step * 1024;                                                    \
                                                                                         \
   vram += psx_offset_y * 1024 + psx_offset_x;                                           \
+  vram = (void *)((long)vram & ~3);                                                     \
   if(bgr24){                                                                            \
     for (i=psx_src_height; i>0; i--, vram+= len, dst+= 320) {                           \
       blit##_x24(dst, vram);                                                            \
