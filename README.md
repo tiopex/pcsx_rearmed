@@ -37,3 +37,20 @@ use of memory cards.
 See the doc/ folder in the source, or /usr/share/doc/pcsx/ on Debian systems,
 for more detailed information on PCSX-Reloaded. A UNIX manpage is also
 available.
+
+
+Build steps for MiyooCFW
+=============
+
+Docker cross-compilation with musl-static setup:
+```sh
+git clone https://github.com/tiopex/pcsx_rearmed.git
+cd pcsx_rearmed
+git submodule init && git submodule update
+docker pull miyoocfw/toolchain-static-musl:latest
+docker run --volume ./:/src/ -it miyoocfw/toolchain-static-musl:latest
+cd /src
+./configure --platform=miyoo --gpu=unai_old  --disable-neon
+make
+make rel
+```
