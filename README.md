@@ -44,7 +44,7 @@ Build steps for MiyooCFW
 
 Docker cross-compilation with musl-static setup:
 
-# gpu unai_old
+##### gpu unai_old
 ```sh
 git clone https://github.com/tiopex/pcsx_rearmed.git
 cd pcsx_rearmed
@@ -57,7 +57,7 @@ make
 make rel
 ```
 
-# gpu unai
+##### gpu unai
 ```sh
 git clone https://github.com/tiopex/pcsx_rearmed.git
 cd pcsx_rearmed
