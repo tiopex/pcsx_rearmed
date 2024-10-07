@@ -1,4 +1,4 @@
-/* 
+/*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -9,7 +9,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
+ * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
@@ -220,50 +220,50 @@ static inline uint16_t mask_filter(uint16_t *s)
 
 static inline void blit256_x15(uint16_t* dst, const void* src)
 {
-  asm volatile (
-    "   .arm                          ;\n"
-    "   .align 2                      ;\n"
-    "a: .word  0x80008000             ;\n"
-    "   mov     r0, %0                ;\n"
-    "   mov     r1, %1                ;\n"
-    "   mov     r10, #16              ;\n"
-    "   ldr     r9, a                 ;\n"
-    "0: ldmia   r1!, {r2-r8,lr}       ;\n"
-    "   orr     r2, r9                ;\n"
-    "   orr     r3, r9                ;\n"
-    "   orr     r4, r9                ;\n"
-    "   orr     r5, r9                ;\n"
-    "   orr     r6, r9                ;\n"
-    "   orr     r7, r9                ;\n"
-    "   orr     r8, r9                ;\n"
-    "   orr     lr, r9                ;\n"
-    "   str     r2, [r0], #4          ;\n"
-    "   lsr     r2, #16               ;\n"
-    "   orr     r2, r3, lsl #16       ;\n"
-    "   str     r2, [r0], #4          ;\n"
-    "   lsr     r3, #16               ;\n"
-    "   orr     r3, r4, lsl #16       ;\n"
-    "   str     r3, [r0], #4          ;\n"
-    "   lsr     r4, #16               ;\n"
-    "   orr     r4, r4, lsl #16       ;\n"
-    "   str     r4, [r0], #4          ;\n"
-    "   str     r5, [r0], #4          ;\n"
-    "   str     r6, [r0], #4          ;\n"
-    "   lsr     r6, #16               ;\n"
-    "   orr     r6, r7, lsl #16       ;\n"
-    "   str     r6, [r0], #4          ;\n"
-    "   lsr     r7, #16               ;\n"
-    "   orr     r7, r8, lsl #16       ;\n"
-    "   str     r7, [r0], #4          ;\n"
-    "   lsr     r8, #16               ;\n"
-    "   orr     r8, r8, lsl #16       ;\n"
-    "   str     r8, [r0], #4          ;\n"
-    "   subs    r10, #1               ;\n"
-    "   str     lr, [r0], #4          ;\n"
-    "   bgt     0b                    ;\n"
-    :: "r"(dst), "r"(src) 
-    : "cc", "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "lr");
+	asm volatile (
+			"   .arm                          ;\n"
+			"   .align 2                      ;\n"
+			"a: .word  0x80008000             ;\n"
+			"   mov     r10, #16              ;\n"
+			"   ldr     r9, a                 ;\n"
+			"0: ldmia   %[src]!, {r2-r8,lr}   ;\n"
+			"   orr     r2, r9                ;\n"
+			"   orr     r3, r9                ;\n"
+			"   orr     r4, r9                ;\n"
+			"   orr     r5, r9                ;\n"
+			"   orr     r6, r9                ;\n"
+			"   orr     r7, r9                ;\n"
+			"   orr     r8, r9                ;\n"
+			"   orr     lr, r9                ;\n"
+			"   str     r2, [%[dst]], #4      ;\n"
+			"   lsr     r2, #16               ;\n"
+			"   orr     r2, r3, lsl #16       ;\n"
+			"   str     r2, [%[dst]], #4      ;\n"
+			"   lsr     r3, #16               ;\n"
+			"   orr     r3, r4, lsl #16       ;\n"
+			"   str     r3, [%[dst]], #4      ;\n"
+			"   lsr     r4, #16               ;\n"
+			"   orr     r4, r4, lsl #16       ;\n"
+			"   str     r4, [%[dst]], #4      ;\n"
+			"   str     r5, [%[dst]], #4      ;\n"
+			"   str     r6, [%[dst]], #4      ;\n"
+			"   lsr     r6, #16               ;\n"
+			"   orr     r6, r7, lsl #16       ;\n"
+			"   str     r6, [%[dst]], #4      ;\n"
+			"   lsr     r7, #16               ;\n"
+			"   orr     r7, r8, lsl #16       ;\n"
+			"   str     r7, [%[dst]], #4      ;\n"
+			"   lsr     r8, #16               ;\n"
+			"   orr     r8, r8, lsl #16       ;\n"
+			"   str     r8, [%[dst]], #4      ;\n"
+			"   subs    r10, #1               ;\n"
+			"   str     lr, [%[dst]], #4      ;\n"
+			"   bgt     0b                    ;\n"
+			: [dst] "+r" (dst), [src] "+r" (src)
+	:
+	: "cc", "memory", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "lr");
 }
+
 
 static inline void blit256_x24(uint16_t* dst, const void* src)
 {
@@ -288,29 +288,30 @@ static inline void blit256_x24(uint16_t* dst, const void* src)
 
 static inline void blit320_x15(uint16_t* dst, const void* src)
 {
-  asm volatile (
-    "   .arm                          ;\n"
-    "   .align 2                      ;\n"
-    "c: .word  0x80008000             ;\n"
-    "   mov     r0, %0                ;\n"
-    "   mov     r1, %1                ;\n"
-    "   mov     r10, #20              ;\n"
-    "   ldr     r9, c                 ;\n"
-    "0: ldmia   r1!, {r2-r8,lr}       ;\n"
-    "   orr     r2, r9                ;\n"
-    "   orr     r3, r9                ;\n"
-    "   orr     r4, r9                ;\n"
-    "   orr     r5, r9                ;\n"
-    "   orr     r6, r9                ;\n"
-    "   orr     r7, r9                ;\n"
-    "   orr     r8, r9                ;\n"
-    "   orr     lr, r9                ;\n"
-    "   subs    r10, #1               ;\n"
-    "   stmia   r0!, {r2-r8,lr}       ;\n"
-    "   bgt     0b                    ;\n"
-    :: "r"(dst), "r"(src) 
-    : "cc", "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "lr");
+	asm volatile (
+			"   .arm                          ;\n"
+			"   .align 2                      ;\n"
+			"   mov     r9, #0x8000           ;\n" // Load upper part
+			"   lsl     r9, r9, #16            ;\n" // Shift left to position
+			"   orr     r9, r9, #0x8000       ;\n" // OR with lower part
+			"   mov     r10, #20              ;\n"
+			"0: ldmia   %[src]!, {r2-r8,lr}   ;\n"
+			"   orr     r2, r9                ;\n"
+			"   orr     r3, r9                ;\n"
+			"   orr     r4, r9                ;\n"
+			"   orr     r5, r9                ;\n"
+			"   orr     r6, r9                ;\n"
+			"   orr     r7, r9                ;\n"
+			"   orr     r8, r9                ;\n"
+			"   orr     lr, r9                ;\n"
+			"   subs    r10, #1               ;\n"
+			"   stmia   %[dst]!, {r2-r8,lr}   ;\n"
+			"   bgt     0b                    ;\n"
+			: [dst] "+r" (dst), [src] "+r" (src)
+	:
+	: "cc", "memory", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "lr");
 }
+
 
 static inline void blit320_x24(uint16_t* dst, const void* src)
 {
@@ -341,34 +342,34 @@ static inline void blit320_x24(uint16_t* dst, const void* src)
 
 static inline void blit368_x15(uint16_t* dst, const void* src)
 {
-  asm volatile (
-    "   .arm                          ;\n"
-    "   .align 2                      ;\n"
-    "   .macro ustr rl rt             ;\n"
-    "     lsr   \\rl, #16             ;\n"
-    "     orr   \\rl, \\rt, lsl #16   ;\n"
-    "     orr   \\rl, r9              ;\n"
-    "     str   \\rl, [r0], #4        ;\n"
-    "   .endm                         ;\n"
-    "e: .word  0x80008000             ;\n"
-    "   mov     r0, %0                ;\n"
-    "   mov     r1, %1                ;\n"
-    "   mov     r10, #23              ;\n"
-    "   ldr     r9, e                 ;\n"
-    "0: ldmia   r1!, {r2-r8,lr}       ;\n"
-    "   ustr    r2, r3                ;\n"
-    "   ustr    r3, r4                ;\n"
-    "   ustr    r4, r5                ;\n"
-    "   subs    r10, #1               ;\n"
-    "   orr     r6, r9                ;\n"
-    "   orr     r7, r9                ;\n"
-    "   orr     r8, r9                ;\n"
-    "   orr     lr, r9                ;\n"
-    "   stmia   r0!, {r6-r8,lr}       ;\n"
-    "   bgt     0b                    ;\n"
-    :: "r"(dst), "r"(src) 
-    : "cc", "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "lr");
+	asm volatile (
+			"   .arm                          ;\n"
+			"   .align 2                      ;\n"
+			"   .macro ustr rl, rt            ;\n"
+			"     lsr   \\rl, #16             ;\n"
+			"     orr   \\rl, \\rt, lsl #16   ;\n"
+			"     orr   \\rl, r9              ;\n"
+			"     str   \\rl, [%[dst]], #4    ;\n"
+			"   .endm                         ;\n"
+			"e: .word  0x80008000             ;\n"
+			"   mov     r10, #23              ;\n"
+			"   ldr     r9, e                 ;\n"
+			"0: ldmia   %[src]!, {r2-r8,lr}   ;\n"
+			"   ustr    r2, r3                ;\n"
+			"   ustr    r3, r4                ;\n"
+			"   ustr    r4, r5                ;\n"
+			"   subs    r10, #1               ;\n"
+			"   orr     r6, r9                ;\n"
+			"   orr     r7, r9                ;\n"
+			"   orr     r8, r9                ;\n"
+			"   orr     lr, r9                ;\n"
+			"   stmia   %[dst]!, {r6-r8,lr}   ;\n"
+			"   bgt     0b                    ;\n"
+			: [dst] "+r" (dst), [src] "+r" (src)
+	:
+	: "cc", "memory", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "lr");
 }
+
 
 static inline void blit368_x24(uint16_t* dst, const void* src)
 {
@@ -439,41 +440,42 @@ static inline void blit384_x24(uint16_t* dst, const void* src)
 
 static inline void blit512_x15(uint16_t* dst, const void* src)
 {
-  asm volatile (
-    "   .arm                          ;\n"
-    "   .align 2                      ;\n"
-    "i: .word  0x80008000             ;\n"
-    "   mov     r0, %0                ;\n"
-    "   mov     r1, %1                ;\n"
-    "   mov     r10, #32              ;\n"
-    "   ldr     r9, i                 ;\n"
-    "0: ldmia   r1!, {r2-r8,lr}       ;\n"
-    "   lsl     r2, #16               ;\n"
-    "   lsr     r2, #16               ;\n"
-    "   orr     r2, r3, lsl #16       ;\n"
-    "   orr     r2, r9                ;\n"
-    "   str     r2, [r0], #4          ;\n"
-    "   lsr     r4, #16               ;\n"
-    "   lsr     r3, #16               ;\n"
-    "   orr     r3, r4, lsl #16       ;\n"
-    "   orr     r3, r9                ;\n"
-    "   str     r3, [r0], #4          ;\n"
-    "   lsr     r5, #16               ;\n"
-    "   orr     r5, r6, lsl #16       ;\n"
-    "   orr     r5, r9                ;\n"
-    "   str     r5, [r0], #4          ;\n"
-    "   lsr     r8, #16               ;\n"
-    "   lsr     lr, #16               ;\n"
-    "   orr     r7, r9                ;\n"
-    "   str     r7, [r0], #4          ;\n"
-    "   orr     r8, lr, lsl #16       ;\n"
-    "   subs    r10, #1               ;\n"
-    "   orr     r8, r9                ;\n"
-    "   str     r8, [r0], #4          ;\n"
-    "   bgt     0b                    ;\n"
-    :: "r"(dst), "r"(src) 
-    : "cc", "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "lr");
+	asm volatile (
+			"   .arm                          ;\n"
+			"   .align 2                      ;\n"
+			"   mov     r9, #0x8000           ;\n" // Load upper part
+			"   lsl     r9, r9, #16            ;\n" // Shift left to position
+			"   orr     r9, r9, #0x8000       ;\n" // OR with lower part
+			"   mov     r10, #32              ;\n"
+			"0: ldmia   %[src]!, {r2-r8,lr}   ;\n"
+			"   lsl     r2, #16               ;\n"
+			"   lsr     r2, #16               ;\n"
+			"   orr     r2, r3, lsl #16       ;\n"
+			"   orr     r2, r9                ;\n"
+			"   str     r2, [%[dst]], #4      ;\n"
+			"   lsr     r4, #16               ;\n"
+			"   lsr     r3, #16               ;\n"
+			"   orr     r3, r4, lsl #16       ;\n"
+			"   orr     r3, r9                ;\n"
+			"   str     r3, [%[dst]], #4      ;\n"
+			"   lsr     r5, #16               ;\n"
+			"   orr     r5, r6, lsl #16       ;\n"
+			"   orr     r5, r9                ;\n"
+			"   str     r5, [%[dst]], #4      ;\n"
+			"   lsr     r8, #16               ;\n"
+			"   lsr     lr, #16               ;\n"
+			"   orr     r7, r9                ;\n"
+			"   str     r7, [%[dst]], #4      ;\n"
+			"   orr     r8, lr, lsl #16       ;\n"
+			"   subs    r10, #1               ;\n"
+			"   orr     r8, r9                ;\n"
+			"   str     r8, [%[dst]], #4      ;\n"
+			"   bgt     0b                    ;\n"
+			: [dst] "+r" (dst), [src] "+r" (src)
+	:
+	: "cc", "memory", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "lr");
 }
+
 
 static inline void blit512_x24(uint16_t* dst, const void* src)
 {
@@ -499,31 +501,31 @@ static inline void blit512_x24(uint16_t* dst, const void* src)
 
 static inline void blit640_x15(uint16_t* dst, const void* src)
 {
-  asm volatile (
-    "   .arm                          ;\n"
-    "   .align 2                      ;\n"
-    "   .macro lhw_str rl rt          ;\n"
-    "     lsl   \\rl, #16             ;\n"
-    "     lsr   \\rl, #16             ;\n"
-    "     orr   \\rl, \\rt, lsl #16   ;\n"
-    "     orr   \\rl, r9              ;\n"
-    "     str   \\rl, [r0], #4        ;\n"
-    "   .endm                         ;\n"
-    "k: .word  0x80008000             ;\n"
-    "   mov     r0, %0                ;\n"
-    "   mov     r1, %1                ;\n"
-    "   mov     r10, #40              ;\n"
-    "   ldr     r9, k                 ;\n"
-    "0: ldmia   r1!, {r2-r8,lr}       ;\n"
-    "   lhw_str r2, r3                ;\n"
-    "   lhw_str r4, r5                ;\n"
-    "   lhw_str r6, r7                ;\n"
-    "   subs    r10, #1               ;\n"
-    "   lhw_str r8, lr                ;\n"
-    "   bgt     0b                    ;\n"
-    :: "r"(dst), "r"(src) 
-    : "cc", "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "lr");
+	asm volatile (
+			"   .arm                          ;\n"
+			"   .align 2                      ;\n"
+			"   .macro lhw_str rl, rt         ;\n"
+			"     lsl   \\rl, #16             ;\n"
+			"     lsr   \\rl, #16             ;\n"
+			"     orr   \\rl, \\rt, lsl #16   ;\n"
+			"     orr   \\rl, r9              ;\n"
+			"     str   \\rl, [%[dst]], #4    ;\n"
+			"   .endm                         ;\n"
+			"k: .word  0x80008000             ;\n"
+			"   mov     r10, #40              ;\n"
+			"   ldr     r9, k                 ;\n"
+			"0: ldmia   %[src]!, {r2-r8,lr}   ;\n"
+			"   lhw_str r2, r3                ;\n"
+			"   lhw_str r4, r5                ;\n"
+			"   lhw_str r6, r7                ;\n"
+			"   subs    r10, #1               ;\n"
+			"   lhw_str r8, lr                ;\n"
+			"   bgt     0b                    ;\n"
+			: [dst] "+r" (dst), [src] "+r" (src)
+	:
+	: "cc", "memory", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "lr");
 }
+
 
 static inline void blit640_x24(uint16_t* dst, const void* src)
 {
@@ -714,11 +716,11 @@ void plat_init(void)
   screen = SDL_SetVideoMode(320, 240, 16, SDL_HWSURFACE | SDL_DOUBLEBUF);
   if (screen == NULL) {
 		printf("%s, failed to set video mode\n", __func__);
-		exit(-1); 
+		exit(-1);
   }
   SDL_ShowCursor(0);
   system("echo 10 > /proc/sys/vm/swappiness");
-  
+
   memdev = open("/dev/mem", O_RDWR);
   if(memdev < 0){
     printf("failed to open /dev/mem\n");
